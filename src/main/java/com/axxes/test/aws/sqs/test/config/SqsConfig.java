@@ -1,30 +1,16 @@
 package com.axxes.test.aws.sqs.test.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConfigurationProperties(prefix = "sqs")
+@Getter
+@Setter
 public class SqsConfig {
 
-    @Value("${aws.access.key}")
-    private String accessKey;
-
-    @Value("${aws.secret.key}")
-    private String secretKey;
-
-    @Bean
-    public AmazonSQS amazonSQSClient() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        return AmazonSQSClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withRegion(Regions.US_EAST_1)
-                .build();
-    }
+    private String queueName;
 
 }

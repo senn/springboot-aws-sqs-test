@@ -1,40 +1,34 @@
 package com.axxes.test.aws.sqs.test;
 
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.model.GetQueueUrlResult;
+import com.axxes.test.aws.sqs.test.config.SqsConfig;
 import com.axxes.test.aws.sqs.test.model.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class Producer {
 
-    private static final ObjectMapper objectMapper =  new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${aws.queueName}")
-    private String queueName;
-
-    private final AmazonSQS amazonSQSClient;
-
-    public Producer(AmazonSQS amazonSQSClient) {
-        this.amazonSQSClient = amazonSQSClient;
-    }
+    private final SqsConfig sqsConfig;
+    private final SqsTemplate sqsTemplate;
 
     public void publishMessage(String id) {
         try {
-            GetQueueUrlResult queueUrl = amazonSQSClient.getQueueUrl(queueName);
             var message = Message.builder()
                     .id(id)
                     .content("message " + id)
                     .createdAt(new Date()).build();
             var jsonMessage = objectMapper.writeValueAsString(message);
-            var result = amazonSQSClient.sendMessage(queueUrl.getQueueUrl(), jsonMessage);
-            log.info("Message {} published: {}", jsonMessage, result);
+            var result = sqsTemplate.send(sqsConfig.getQueueName(), jsonMessage);
+            log.info("Message {} published: {}", jsonMessage, result.messageId());
         } catch (Exception e) {
             log.error("Queue Exception Message: {}", e.getMessage());
         }

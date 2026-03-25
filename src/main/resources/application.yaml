@@ -1,9 +1,13 @@
 spring:
   application:
     name: springboot-aws-sqs-test
-aws:
-  access:
-    key: replace_me
-  secret:
-    key: replace_me
+  cloud:
+    aws: # SqsTemplate configuration
+      credentials:
+        access-key: replace_me
+        secret-key: replace_me
+    region:
+      static: us-east-1 # A static value for region used by auto-configured AWS clients (e.g., eu-west-1) as AWS credentials are valid in a context of a region.
+      auto: false
+sqs:
   queueName: DemoSQS
