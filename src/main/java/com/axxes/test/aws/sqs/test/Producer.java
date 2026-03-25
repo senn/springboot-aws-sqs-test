@@ -15,6 +15,8 @@ import java.util.Date;
 @Slf4j
 public class Producer {
 
+    private static final String MESSAGE_GROUP_ID = "test-messages";
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final SqsConfig sqsConfig;
@@ -27,7 +29,11 @@ public class Producer {
                     .content("message " + id)
                     .createdAt(new Date()).build();
             var jsonMessage = objectMapper.writeValueAsString(message);
-            var result = sqsTemplate.send(sqsConfig.getQueueName(), jsonMessage);
+            var result = sqsTemplate.send(opts ->
+                    opts.queue(sqsConfig.getQueueName())
+                        .payload(jsonMessage)
+                        .messageGroupId(MESSAGE_GROUP_ID)
+            );
             log.info(">>> Published message {} with id {}", jsonMessage, result.messageId());
         } catch (Exception e) {
             log.error("Queue Exception Message: {}", e.getMessage());
