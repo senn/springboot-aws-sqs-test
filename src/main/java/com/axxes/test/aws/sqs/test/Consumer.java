@@ -13,7 +13,7 @@ public class Consumer {
 
     @SqsListener("${sqs.queueName}")
     public void consumeMessages(Message message) {
-        log.info("Read Message from queue: {}", message);
+        log.info("<<< Read Message from queue: {}", message);
     }
 
 }

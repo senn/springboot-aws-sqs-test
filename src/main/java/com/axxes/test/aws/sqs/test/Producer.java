@@ -28,7 +28,7 @@ public class Producer {
                     .createdAt(new Date()).build();
             var jsonMessage = objectMapper.writeValueAsString(message);
             var result = sqsTemplate.send(sqsConfig.getQueueName(), jsonMessage);
-            log.info("Message {} published: {}", jsonMessage, result.messageId());
+            log.info(">>> Published message {} with id {}", jsonMessage, result.messageId());
         } catch (Exception e) {
             log.error("Queue Exception Message: {}", e.getMessage());
         }
