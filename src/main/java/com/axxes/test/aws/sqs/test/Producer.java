@@ -33,6 +33,7 @@ public class Producer {
                     opts.queue(sqsConfig.getQueueName())
                         .payload(jsonMessage)
                         .messageGroupId(MESSAGE_GROUP_ID)
+                        .messageDeduplicationId(id)
             );
             log.info(">>> Published message {} with id {}", jsonMessage, result.messageId());
         } catch (Exception e) {
