@@ -8,16 +8,23 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class SpringbootAwsSqsTestApplication {
 
+	private static ThreadLocal<Integer> idCounter = ThreadLocal.withInitial(() -> 0);
+
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootAwsSqsTestApplication.class, args);
+		idCounter.remove();
 	}
 
 	@Bean
 	public ApplicationRunner runner(Producer producer) {
 		return args -> {
-			Thread.sleep(3000);
-			for (int i = 0; i < 10; i++) {
-				producer.publishMessage(String.valueOf(i));
+			while (true) {
+				Thread.sleep(3000);
+				int tempCount = idCounter.get();
+				for (int i = tempCount; i < (tempCount + 10); i++) {
+					producer.publishMessage(String.valueOf(i));
+					idCounter.set(i);
+				}
 			}
 		};
 	}
