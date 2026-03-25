@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: springboot-aws-sqs-test
+aws:
+  access:
+    key: replace_me
+  secret:
+    key: replace_me
+  queueName: DemoSQS
