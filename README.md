@@ -7,6 +7,7 @@ Check the commits to see gradual changes:
 1. old AWS SDK
 2. Spring Cloud AWS SDK
 3. some improvements
+4. use Floci as local env instead of actual AWS
 
 ## Remarks
 
